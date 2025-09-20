@@ -1,7 +1,6 @@
 # book_crawler
 
-##### bc_phase0a_prepare_tables
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_phase0a_prepare_tables.ipynb)
+#### bc_phase0a_prepare_tables : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_phase0a_prepare_tables.ipynb)
 ##### bc_phase0b_prepare_prompts
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_phase0b_prepare_prompts.ipynb)
 ##### bc_phase0c_prepare_procedures
@@ -31,4 +30,5 @@ uv pip install ipykernel
 uv pip install google-cloud-bigquery
 uv pip install bigquery_magics
 uv pip install pytest
+uv pip install bigframes
 ```
