@@ -29,6 +29,5 @@ uv pip install pydantic
 uv pip install ipykernel
 uv pip install google-cloud-bigquery
 uv pip install bigquery_magics
-uv pip install pytest
 uv pip install bigframes
 ```
