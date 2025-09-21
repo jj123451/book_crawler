@@ -2,8 +2,9 @@
 
 The processing is divided to several semi-independent stages. For clarity the diagram of each stage of processing is provided separately.
 
-*note 1: Phase 1 consist of loading books to `book` table. It is simple operation and can be done in more then way. Therefore it is omitted here.*
-*note 2: Every SQL operation, both involving AI and not, is processing in parallel all the books. So it is much more efficient to load and process multiple books at once.*
+*note: Every SQL operation, both involving AI and not, is processing in parallel all the books. It is therfore much more efficient to load and process multiple books at once.*
+
+Phase 1 consist of loading books to `book` table. It is helper operation to test the solution so it's not presented on the diagram.
 
 ## Phase 2 - Book Correction
 
@@ -25,7 +26,7 @@ Prepare concise summary of each book. It will be supplementary information in se
 
 ## Phase 5 - Character identification
 
-By far the most difficult part of whole project. 
+By far the most crucial part of whole project. 
 Can take a lot of time, e.g. extraction of chuman characters in 3 million chars long adventure book took from 15 to 30 minutes (depends probably on cloud servers load)
 
 ![Identification](phase5_characters_identification.drawio.png "Identification")

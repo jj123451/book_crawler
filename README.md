@@ -1,27 +1,43 @@
 # The Book Crawler
 
+*the project was created in respone to "BigQuery AI - Building the Future of Data" Google competition to promote BigQuery AI usage in business solutions*
+
 ## 1. The story
 
-*note: The project was created in respone to "BigQuery AI - Building the Future of Data" Google competition to promote BigQuery AI usage in business solutions*
+### The problem
 
 Let's take a book. A big one. With lots of rich human characters and full of twisted plots. The crime story, perhaps.
 As you progress reading it, it gets harded to understand all the plot twists and who is who in the book. 
-Some characters have the same names. Some appear in the beginnig, the disappear and reapear near the end.
-Some lie, use psoudonyms, pretend to be somone else, then reveal themselfs.
-You cease understand who is who and plot gets more and more foggy.
-Finally you get it: the grand mother of main character must be a daughter of drug cartel boss. 
-Now it al makes sense, the whole picture is clear ... no ... it doesn't make sense at all. You put the book down.
+Some characters have the same names. Some appear in the beginnig, then disappear and reapear near the end.
+Some lie, use psoudonyms, pretend to be somone else, then reveal themselfes.
+You start to cease to understand who is who and plot gets more and more foggy.
+Finally you get it: the grand mother of main character must be a daughter of drug cartel boss!
+Now it all makes sense, the whole picture is clear ... no ... it doesn't make sense at all. You put the book down.
 
-*note: It was meant to be about business solutions, so where is a business here? Replace "book" with vast police report or court documents, or maybe insurance companies report in complicated, large sum of money, claims. Seeing judges in a court room, with these huge piles of case documents, did you ever wonder if they read them all, really understands them well? Will the innocent be sentenced or maybe other way around? So here is the business.*
+### And other problems
 
-Using AI seems to be obvious and easy solutin. Let's put all this data into prompt and ask AI to analyze. Simple, right?
+It was meant to be about business solutions, so where is a business here? 
+
+Seeing on TV screen the judge sitting in a court room, with huge piles of case documents, did you ever wonder if he/she read and analysed them all thoroughly? And police? Have they connected all the dots? Or maybe the innocent one will be sentenced and the villian set free?
+
+**Other problematic areas:**
+- Insurance Claims & Fraud Detection (already mentioned) - complex insurance cases (especially fraud investigations) involve huge volumes of documents
+- Financial Compliance & Risk - analyze massive document sets to detect money laundering
+- Healthcare Records & Clinical Trials - track patients across long reports from different sources
+- Intelligence & Security - intelligence agencies may need to track individuals across open-source data, social media, etc.
+
+### The (too) obvious solution
+
+Using AI seems to be obvious and easy solution. Let's put all this data into prompt and ask AI to analyze. Simple, right?
 Not really. First you hit the context window limit. Ok, let's split the documents, the context windows nowadays have million of tokens, or more, so it wouldn't be so many chunks.
 You put the first chunk ... and you hit the another problem. The analysis takes ages and result is nonsence. The attention process in LLM has N2 or N3 computational complexity, so it's very non-optimal to make such large inquires. Moreover the AI quality drastically reduces with large data and/or complicated prompts. In my tests, to have usefull results I needed to put 50 thousand of tokens max, preferably half of it. And there is the output token limits, sometimes much less then context windows.
 
 So we need to split more, much much more ... but then AI losts the plot, stops to understand who is who, mixing human characters or not recognizing the same ones. Just like humans.
 
-And this exactly the problem this project is designed for.
-It's using BigQuery AI to simultaneously process huge amount of data extracted from large documents chunks (here: books).
+### The real solution
+
+And this exactly the problem this project POC is designed for.
+It is using BigQuery AI to simultaneously process huge amount of data extracted from large documents divided to smaller fragments
 First extracting the identification information of every human characters. 
 Pre-matching them with the help of semantic embeddings and then do the final matching with the help of AI inference, very carefuly, to not make mistakes.
 All of this for multiple books at once, with multiple chuman characters at once executing AI inferece just in SQL queries for thousands of rows at once.
@@ -31,24 +47,27 @@ Then we again go fragment by fragment for each human character, extracting the i
 
 Still we have unstructured text information. Usefull, but maybe we have huge number of characters and want to do some statistical analysis?
 So here is the last part: clustering. Again, using AI inference, semantic embeddings, clustering statistical methods
-and SQL allowing us to execute thousands or more computations nad inferences in parallel.
+and SQL allowing us to execute thousands or more computations and inferences in parallel.
 
-That's the big picture, for more detailed explanations look here: @@@@@
-
-## 2. Installation
+## 2. Installation and configuration
 
 ### Google BigQuery
 
 First you need to have the Google cloud account with permissions to use BigQuery and AI, with configured connection between them.
-Then you need to generate private key to authenticate.
-More details here: @@@@@@@@@@
+- [Select or create a Google Cloud project](https://console.cloud.google.com/cloud-resource-manager). When you first create an account, you get a $300 free credit - it is surprisingly efficient, during this project preparation I was repeatedly running queries, executing even hundreds of AI inferences at the same time - still I didn't use even 1/10 of this sum.
+- [Make sure that billing is enabled for your project](https://cloud.google.com/billing/docs/how-to/modify-project)
+- [Enable the BigQuery, BigQuery Connection, and Vertex AI APIs](https://console.cloud.google.com/flows/enableapi?apiid=bigquery.googleapis.com,bigqueryconnection.googleapis.com,aiplatform.googleapis.com)
+- [Configure connection between BigQuery and Vertex AI](https://cloud.google.com/bigquery/docs/create-cloud-resource-connection)
+*note: The connection needs permissions and finding where to add it may be tricky (it was for me). On the console UI, go to left top drop down menu and select IAM & Admin -> IAM, click Grant access, fill in full connection name (email alike) in the principal, then add required role.*
+
+For authentication from the notebooks you need the credential JSON, [please see here how to obtain one](https://cloud.google.com/docs/authentication/application-default-credentials)
 
 ### Local environment
 
-1. Save the authenticate private key into local file and set `GOOGLE_APPLICATION_CREDENTIALS` environment variable with full path pointing to this file
-2. clone the git project to local folder
-3. create the uv venv: e.g. uv venv --python 3.13
-4. install dependencies:
+1. Save the BigQuery credential JSON into local file and set `GOOGLE_APPLICATION_CREDENTIALS` environment variable with full path pointing to this file
+2. Clone the git project to local folder
+3. Create the uv venv: e.g. uv venv --python 3.13
+4. Install dependencies:
 ```
 uv pip install nltk
 uv pip install pydantic
@@ -57,22 +76,22 @@ uv pip install google-cloud-bigquery
 uv pip install bigquery_magics
 uv pip install bigframes
 ```
-5. configure vscode:
+5. Configure vscode:
 ctr + shift + p, choose "Python: Select interpreter" : .\.venv\Scripts\python.exe
-6. Change the project and data set ids at the notebooks beginning (second cell)
+6. Change the project and data set ids to your own at the notebooks beginning (in second cell)
 
 ### Google Colab
 
-1. put the json content from authenticate private key into `BIGQUERY_CREDENTIALS` secret
-2. remove first line from the notebooks: `%%script false --no-raise-error`
-3. Change the project and data set ids at the notebooks beginning (second cell)
+1. Put the credential JSON as value of `BIGQUERY_CREDENTIALS` secret (the field is very small comparing to JSON size, but it will work, it is probably that no one took picture of your key)
+2. Remove first line from the notebooks: `%%script false --no-raise-error`
+3. Change the project and data set ids at the notebooks beginning (in second cell)
 
 ## 3. Running
 
 ### Prepare initialization code
 The following notebook creates necessary tables, prompts, SQL procedures and statistical analysis SQL views. Needs to bu run once before executing other notebooks.
 
-[Prepare schems](https://github.com/jj123451/book_crawler/blob/main/bc_phase0_prepare_schema.ipynb)
+[Prepare schema](https://github.com/jj123451/book_crawler/blob/main/bc_phase0_prepare_schema.ipynb)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_phase0_prepare_schema.ipynb)
 
 ### Gather the books
@@ -96,7 +115,17 @@ This notebook does the whole processing, which internally consists of several ph
 [Processing](https://github.com/jj123451/book_crawler/blob/main/bc_phase2_to_7_processing.ipynb)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_phase2_to_7_processing.ipynb)
 
-### Data analysis
+## 4. Data analysis
+
+The final data are in follow tables:
+- **'characters'** - the main table with all the gathered data and dominating cluster ids for each type of gathered data
+- 'clusters' - contains information about discovered clusters
+- 'character_cluster_details' - contains information about sub-cluster ids for gathered data. 
+    - For example let's assume that 'wealth' data is long and complicated, e.g.: "Described as a poor exile without a roof over his head, implying no significant wealth. Also noted as being part of Kmita's company and having implied noble standing." 
+    - The 'character_cluster_details' will have more of much shorter data without unnecessary information: e.g. "poor, no significant wealth" and "homeless". 
+    - Each sub-data will have its sub-claster id assigned
+    - To join character_cluster_details' with 'characters' table, use 'id' and 'book_id' columns ('id' alone is not unique)
+- 'v_characters_enriched' - view similar to 'characters' table but with cluster names and sanitized gender values
 
 For data analysis you can use following predefined SQL views as basic examples:
 - `v_formatted_cluster_statistics` - shows all the clusters identified by KMean analysis
@@ -114,10 +143,31 @@ You can also see the simple examples how to use the views to vizualize data usin
 [Statistical Analysis Examples](https://github.com/jj123451/book_crawler/blob/main/bc_phase2_tobc_phase8_statistical_analysis_examples_7_processing.ipynb)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_phase8_statistical_analysis_examples.ipynb)
 
-# Technical documentation
+## 5. Technical documentation
 
-1. Please see the architectural diagram here: 
-2. Please comments inside the notebooks describing all the steps
+1. Please see the [architectural diagram](./tree/main/diagrams)
+2. Please see comments inside the notebooks, especially these two:
+- [Preparing schema notebook](./bc_phase0_prepare_schema.ipynb)
+- [Processing notebook](./bc_phase2_to_7_processing.ipynb)
 
-I recommended to see the notebooks in [split_notebooks](https://github.com/jj123451/book_crawler/tree/main/split_notebooks) folder.
-They contain the same code as notebooks in main folders, but are splitted to multiple, functionally sepearated, parts for better clarity.
+You can also see the notebooks in [split_notebooks](https://github.com/jj123451/book_crawler/tree/main/split_notebooks) folder.
+They contain the same code as notebooks in main folders, but are splitted to multiple, functionally sepearated, parts, for better clarity.
+
+## 6. Other helpful information
+
+### Cleaning 
+
+This notebook contains some helpful cleaning mehods, e.g. to drop all temporary tables
+
+[Cleaning](https://github.com/jj123451/book_crawler/blob/main/bc_util_clean_tables.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_util_clean_tables.ipynb)
+
+### Adding new books
+
+After Phase 6, all processed books in 'book' table are marked as 'processed' and will not be processed again. 
+
+You can then safely add new books and re-run whole processing - only the new books will be processed. The old content of 'characters' table will remain intact. Characters from new books will be appended to it.
+
+### Clustering again
+
+If you want to repeat clustering with new clusters size, just run all notebooks from Phase 7 again. They will recreate clustering data, leaving 'characters' data intact.
