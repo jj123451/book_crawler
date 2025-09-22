@@ -74,8 +74,6 @@ First, you need a Google Cloud account with permissions for both BigQuery and AI
 3. [Enable the BigQuery, BigQuery Connection, and Vertex AI APIs](https://console.cloud.google.com/flows/enableapi?apiid=bigquery.googleapis.com,bigqueryconnection.googleapis.com,aiplatform.googleapis.com).  
 4. [Configure a connection between BigQuery and Vertex AI](https://cloud.google.com/bigquery/docs/create-cloud-resource-connection).  
 
-*Note: Configuring permissions can be tricky. In the console UI, open the top-left dropdown menu, go to **IAM & Admin → IAM**, click **Grant access**, and enter the full connection name (in an email-like format) as the principal. Then assign the required role.*  
-
 For authentication from notebooks, you need a credential JSON. [See here how to obtain one](https://cloud.google.com/docs/authentication/application-default-credentials).
 
 ---
@@ -108,7 +106,7 @@ Press Ctrl+Shift+P, choose **Python: Select Interpreter**, and select `.venv\Scr
 
 ## 3. Running
 
-In short: run the three notebooks in order—schema preparation, book selection, and processing. Simply run all cells in each one.
+In short: run the three notebooks in order — schema preparation, book selection, and processing. Simply run all cells in each one.
 Details with links are below:
 
 ### Prepare schema and metadata
@@ -166,12 +164,12 @@ Predefined SQL views for analysis:
 
 Example visualizations:
 
-[Statistical Analysis Examples](https://github.com/jj123451/book_crawler/blob/main/bc_phase2_tobc_phase8_statistical_analysis_examples_7_processing.ipynb)
+[Statistical Analysis Examples](https://github.com/jj123451/book_crawler/blob/main/bc_phase8_statistical_analysis_examples.ipynb)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jj123451/book_crawler/blob/main/bc_phase8_statistical_analysis_examples.ipynb)
 
 ## 5. Technical documentation
 
-1. See the [architectural diagram](./tree/main/diagrams)
+1. See the [architectural diagram](https://github.com/jj123451/book_crawler/tree/main/diagrams)
 2. Check comments inside notebooks, especially:
 - [Preparing schema notebook](./bc_phase0_prepare_schema.ipynb)
 - [Processing notebook](./bc_phase2_to_7_processing.ipynb)
